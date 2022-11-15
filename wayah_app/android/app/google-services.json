@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "431383675522",
+    "project_id": "egr423-mobile-app",
+    "storage_bucket": "egr423-mobile-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:431383675522:android:e4e7f094547afec033ea9b",
+        "android_client_info": {
+          "package_name": "com.example.wayah_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "431383675522-hkn3kd46s6o1re54csej1eisq296bcr1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBX59AomYM_P_tAg5C_rJ0tZYKBNl3CPo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "431383675522-hkn3kd46s6o1re54csej1eisq296bcr1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
