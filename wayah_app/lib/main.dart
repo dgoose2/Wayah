@@ -7,6 +7,8 @@ import 'firebase_options.dart';
 import 'package:wayah_app/screens/login_screen.dart';
 import 'package:wayah_app/screens/home_screen.dart';
 
+//Jake is cool
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
