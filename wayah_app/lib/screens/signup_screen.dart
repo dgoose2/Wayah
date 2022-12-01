@@ -22,8 +22,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _userEmail = '';
   String _userPassword = '';
   String _userName = '';
+  int _userRadius = 15;
 
-  void _submitSignupForm(String email, String password, String username) async {
+  void _submitSignupForm(
+      String email, String password, String username, int userRadius) async {
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
 
@@ -38,10 +40,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         await FirebaseFirestore.instance
             .collection('users')
             .doc(authResult.user!.uid)
-            .set({
-          'username': username,
-          'email': email,
-        });
+            .set({'username': username, 'email': email, 'radius': userRadius});
         Navigator.of(context).pop();
       }
     } catch (error) {
@@ -299,7 +298,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       borderRadius: BorderRadius.circular(10),
                     )),
                 onPressed: () {
-                  _submitSignupForm(_userEmail, _userPassword, _userName);
+                  _submitSignupForm(
+                      _userEmail, _userPassword, _userName, _userRadius);
                   // Timer(Duration(seconds: 1), () {
                   //   Navigator.of(context).pop();
                   // });

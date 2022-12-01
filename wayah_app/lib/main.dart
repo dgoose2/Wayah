@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+import 'package:wayah_app/screens/no_access.dart';
 import 'package:wayah_app/screens/profile_screen.dart';
 import 'package:wayah_app/screens/signup_screen.dart';
 import 'firebase_options.dart';
@@ -73,6 +74,7 @@ class MyApp extends StatelessWidget {
               email: email,
               username: username,
             ),
+        NoAccess.routeName: (ctx) => NoAccess(),
       },
     );
   }
