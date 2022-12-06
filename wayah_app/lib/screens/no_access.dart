@@ -5,7 +5,9 @@ import 'package:flutter/src/widgets/framework.dart';
 class NoAccess extends StatelessWidget {
   static const routeName = '/no-access';
 
-  const NoAccess({super.key});
+  String username;
+
+  NoAccess({super.key, required this.username});
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +25,11 @@ class NoAccess extends StatelessWidget {
         // ),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 50, right: 50),
+        padding: const EdgeInsets.only(left: 45, right: 45),
         child: Center(
             child: Text(
           textAlign: TextAlign.center,
-          "Sorry unfortanatley we currently do not offer this.",
+          "Sorry $username unfortanatley we currently do not offer this service.",
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         )),
       ),

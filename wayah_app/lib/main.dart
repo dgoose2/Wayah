@@ -74,7 +74,9 @@ class MyApp extends StatelessWidget {
               email: email,
               username: username,
             ),
-        NoAccess.routeName: (ctx) => NoAccess(),
+        NoAccess.routeName: (ctx) => NoAccess(
+              username: username,
+            ),
       },
     );
   }

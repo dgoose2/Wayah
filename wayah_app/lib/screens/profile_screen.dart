@@ -43,12 +43,13 @@ class ProfileScreen extends StatelessWidget {
                 height: 39,
                 width: MediaQuery.of(context).size.width * 0.9,
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10)),
-                    border: Border.all(
-                        color: Color.fromARGB(255, 206, 201, 197), width: 2)),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10)),
+                  border: Border.all(
+                      color: Color.fromARGB(255, 206, 201, 197), width: 2),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20),
                   child: Row(children: [
@@ -85,9 +86,22 @@ class ProfileScreen extends StatelessWidget {
                 height: 39,
                 width: MediaQuery.of(context).size.width * 0.9,
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                        color: Color.fromARGB(255, 206, 201, 197), width: 2)),
+                  color: Colors.white,
+                  border: Border(
+                    left: BorderSide(
+                      color: Color.fromARGB(255, 206, 201, 197),
+                      width: 2,
+                    ),
+                    right: BorderSide(
+                      color: Color.fromARGB(255, 206, 201, 197),
+                      width: 2,
+                    ),
+                    bottom: BorderSide(
+                      color: Color.fromARGB(255, 206, 201, 197),
+                      width: 2,
+                    ),
+                  ),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20),
                   child: Row(children: [
@@ -124,9 +138,22 @@ class ProfileScreen extends StatelessWidget {
                 height: 39,
                 width: MediaQuery.of(context).size.width * 0.9,
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                        color: Color.fromARGB(255, 206, 201, 197), width: 2)),
+                  color: Colors.white,
+                  border: Border(
+                    left: BorderSide(
+                      color: Color.fromARGB(255, 206, 201, 197),
+                      width: 2,
+                    ),
+                    right: BorderSide(
+                      color: Color.fromARGB(255, 206, 201, 197),
+                      width: 2,
+                    ),
+                    bottom: BorderSide(
+                      color: Color.fromARGB(255, 206, 201, 197),
+                      width: 2,
+                    ),
+                  ),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20),
                   child: Row(children: [
@@ -154,9 +181,18 @@ class ProfileScreen extends StatelessWidget {
                 height: 39,
                 width: MediaQuery.of(context).size.width * 0.9,
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                        color: Color.fromARGB(255, 206, 201, 197), width: 2)),
+                  color: Colors.white,
+                  border: Border(
+                    left: BorderSide(
+                      color: Color.fromARGB(255, 206, 201, 197),
+                      width: 2,
+                    ),
+                    right: BorderSide(
+                      color: Color.fromARGB(255, 206, 201, 197),
+                      width: 2,
+                    ),
+                  ),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.only(left: 20),
                   child: Row(children: [
