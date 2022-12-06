@@ -1,18 +1,27 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:wayah_app/widgets/trip_widget.dart';
 
 class OpenPanel extends StatelessWidget {
   Widget collapsedPanel;
   Widget innerOpenPanel;
   final panelController;
+  var firebaseUser;
+
+  String? destinationName;
+  String? avgDistance;
+  List? preferences;
 
   OpenPanel({
     super.key,
     required this.collapsedPanel,
     required this.innerOpenPanel,
     required this.panelController,
+    required this.firebaseUser,
   });
 
   void togglePanel() {
@@ -20,6 +29,29 @@ class OpenPanel extends StatelessWidget {
         ? panelController.close()
         : panelController.open();
   }
+
+  // _fetch() async {
+  //   try {
+  //     firebaseUser = await FirebaseAuth.instance.currentUser;
+
+  //     final QuerySnapshot<Map<String, dynamic>> _tripsQuery =
+  //         await FirebaseFirestore.instance
+  //             .collection('users')
+  //             .doc(firebaseUser!.uid)
+  //             .collection('trips')
+  //             .get();
+
+  //     final trips = _tripsQuery.docs
+  //         .map((trip) => {
+  //               destinationName = trip['trips']['destination'],
+  //               avgDistance = trip['trips']['avgDistance'],
+  //               preferences = trip['trips']['preferences']
+  //             })
+  //         .toList();
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +89,47 @@ class OpenPanel extends StatelessWidget {
                   ),
                 ),
               ),
+              StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(firebaseUser!.uid)
+                    .collection('trips')
+                    .snapshots(),
+                builder: ((context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return ListView(
+                    shrinkWrap: true,
+                    children: snapshot.data!.docs.map((document) {
+                      // return Container(
+                      //   child: Text(
+                      //       document.data()['trips']['destination'].toString()),
+                      // );
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 30, right: 30),
+                        child: TripWidget(
+                          destinationName: document
+                              .data()['trips']['destination']
+                              .toString(),
+                        ),
+                      );
+                    }).toList(),
+                  );
+                }),
+              ),
+              // ListView.builder(
+              //   shrinkWrap: true,
+              //   itemCount: 4,
+              //   itemBuilder: ((context, index) {
+              //     return Padding(
+              //       padding: const EdgeInsets.all(8.0),
+              //       child: TripWidget(),
+              //     );
+              //   }),
+              // ),
               Spacer(),
               Padding(
                 padding: const EdgeInsets.only(bottom: 50),

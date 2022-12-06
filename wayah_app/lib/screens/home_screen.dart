@@ -20,6 +20,14 @@ class HomeScreen extends StatelessWidget {
   String? city;
   String? state;
   String? userId;
+  var firebaseUser;
+
+  HomeScreen({required this.firebaseUser});
+
+
+  String? destinationName;
+  String? avgDistance;
+  List? preferences;
 
   IconData? weatherIcon;
 
@@ -32,22 +40,63 @@ class HomeScreen extends StatelessWidget {
   WeatherFactory wf = new WeatherFactory("e9907feb7be894efad91b9af279ede9c");
 
   _fetch() async {
-    final firebaseUser = await FirebaseAuth.instance.currentUser;
+    firebaseUser = await FirebaseAuth.instance.currentUser;
     if (firebaseUser != null) {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(firebaseUser.uid)
           .get()
-          .then((ds) {
-        userId = firebaseUser.uid.toString();
-        username = ds.data()!['username'].toString();
-        // print(userId);
-        // print(email);
-      }).catchError((e) {
+          .then(
+        (ds) {
+          userId = firebaseUser.uid.toString();
+          username = ds.data()!['username'].toString();
+        },
+      ).catchError((e) {
         print(e);
       });
     }
+    // try {
+    //   final QuerySnapshot<Map<String, dynamic>> _tripsQuery =
+    //       await FirebaseFirestore.instance
+    //           .collection('users')
+    //           .doc(firebaseUser!.uid)
+    //           .collection('trips')
+    //           .get();
+
+    //   final trips = _tripsQuery.docs
+    //       .map((trip) => {
+    //             destinationName = trip['trips']['destination'],
+    //             avgDistance = trip['trips']['avgDistance'],
+    //             preferences = trip['trips']['preferences']
+    //           })
+    //       .toList();
+    // } catch (e) {
+    //   print(e);
+    // }
   }
+
+  // _test() async {
+  //   try {
+  //     final firebaseUser = await FirebaseAuth.instance.currentUser;
+
+  //     final QuerySnapshot<Map<String, dynamic>> _tripsQuery =
+  //         await FirebaseFirestore.instance
+  //             .collection('users')
+  //             .doc(firebaseUser!.uid)
+  //             .collection('trips')
+  //             .get();
+
+  //     final trips = _tripsQuery.docs
+  //         .map((trip) => {
+  //               destinationName = trip['trips']['destination'],
+  //               avgDistance = trip['trips']['avgDistance'],
+  //               preferences = trip['trips']['preferences']
+  //             })
+  //         .toList();
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   _testLocation() async {
     try {
@@ -103,6 +152,7 @@ class HomeScreen extends StatelessWidget {
         maxHeight: MediaQuery.of(context).size.height * 1,
         collapsed: CollapsedPanel(),
         panel: OpenPanel(
+          firebaseUser: firebaseUser,
           panelController: panelController,
           collapsedPanel: CollapsedPanel(),
           innerOpenPanel: InnerOpenPanel(

@@ -26,9 +26,10 @@ void main() async {
 class MyApp extends StatelessWidget {
   String username = '';
   String email = '';
+  var firebaseUser;
 
   _fetch() async {
-    final firebaseUser = await FirebaseAuth.instance.currentUser;
+    firebaseUser = await FirebaseAuth.instance.currentUser;
     if (firebaseUser != null) {
       await FirebaseFirestore.instance
           .collection('users')
@@ -62,7 +63,9 @@ class MyApp extends StatelessWidget {
         builder: ((context, snapshot) {
           if (snapshot.hasData) {
             // print(snapshot.data?.uid);
-            return HomeScreen();
+            return HomeScreen(
+              firebaseUser: firebaseUser,
+            );
           }
           return LoginScreen();
         }),
