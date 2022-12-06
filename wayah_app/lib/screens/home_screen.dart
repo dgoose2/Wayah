@@ -19,6 +19,7 @@ class HomeScreen extends StatelessWidget {
   String? weatherFeelsLike;
   String? city;
   String? state;
+  String? userId;
 
   IconData? weatherIcon;
 
@@ -38,7 +39,9 @@ class HomeScreen extends StatelessWidget {
           .doc(firebaseUser.uid)
           .get()
           .then((ds) {
+        userId = firebaseUser.uid.toString();
         username = ds.data()!['username'].toString();
+        // print(userId);
         // print(email);
       }).catchError((e) {
         print(e);
@@ -80,6 +83,11 @@ class HomeScreen extends StatelessWidget {
   }
 
   @override
+  initState() {
+    _fetch();
+  }
+
+  @override
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
     var user = FirebaseAuth.instance.currentUser!;
@@ -88,14 +96,18 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SlidingUpPanel(
+        controller: panelController,
         borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
         color: Color.fromARGB(255, 141, 141, 218),
         minHeight: MediaQuery.of(context).size.height * 0.08,
         maxHeight: MediaQuery.of(context).size.height * 1,
         collapsed: CollapsedPanel(),
         panel: OpenPanel(
+          panelController: panelController,
           collapsedPanel: CollapsedPanel(),
-          innerOpenPanel: InnerOpenPanel(),
+          innerOpenPanel: InnerOpenPanel(
+            panelController: panelController,
+          ),
         ),
         body: SafeArea(
           top: false,

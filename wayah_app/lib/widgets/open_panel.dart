@@ -6,12 +6,13 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 class OpenPanel extends StatelessWidget {
   Widget collapsedPanel;
   Widget innerOpenPanel;
-  final panelController = PanelController();
+  final panelController;
 
   OpenPanel({
     super.key,
     required this.collapsedPanel,
     required this.innerOpenPanel,
+    required this.panelController,
   });
 
   void togglePanel() {
