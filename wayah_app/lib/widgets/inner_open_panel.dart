@@ -3,9 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:location/location.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:geocoding/geocoding.dart' as Geo;
+import 'package:string_validator/string_validator.dart';
 import 'package:wayah_app/widgets/preference_widget.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
+import 'package:intl/intl.dart';
 
 class InnerOpenPanel extends StatefulWidget {
   PanelController panelController;
@@ -19,6 +23,12 @@ class InnerOpenPanel extends StatefulWidget {
 class _InnerOpenPanelState extends State<InnerOpenPanel> {
   bool selected = false;
   Color selectedColor = Color.fromARGB(255, 141, 141, 218);
+  double? latitude;
+  double? longitude;
+  double? desitnationLatitude;
+  double? destinationLongitude;
+  String? city;
+  String? state;
   var _destination = TextEditingController();
   var _avgDistance = TextEditingController();
   final panelController = PanelController();
@@ -46,6 +56,21 @@ class _InnerOpenPanelState extends State<InnerOpenPanel> {
     }
   }
 
+  _testLocation() async {
+    try {
+      var location = await Location().getLocation();
+      latitude = location.latitude;
+      longitude = location.longitude;
+      var placemarks =
+          await Geo.placemarkFromCoordinates(latitude!, longitude!);
+      state = placemarks[0].administrativeArea;
+      city = placemarks[0].locality;
+      print(city);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   togglePreference() {
     setState(() {
       selected = !selected;
@@ -55,6 +80,18 @@ class _InnerOpenPanelState extends State<InnerOpenPanel> {
   _pushData() async {
     final firebaseUser = await FirebaseAuth.instance.currentUser;
     final isValid = _formKey.currentState!.validate();
+
+    var now = new DateTime.now();
+    var formatter = new DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+
+    List<Geo.Location> locations =
+        await Geo.locationFromAddress(_destination.text);
+
+    desitnationLatitude = locations[0].latitude;
+    destinationLongitude = locations[0].longitude;
+
+    await _testLocation();
 
     try {
       if (isValid) {
@@ -66,8 +103,14 @@ class _InnerOpenPanelState extends State<InnerOpenPanel> {
           {
             'trips': {
               'destination': _destination.text,
-              'avgDistance': _avgDistance.text,
-              'preferences': selectedPrefs
+              'destinationLat': desitnationLatitude,
+              'destinationLong': destinationLongitude,
+              'avgDistance': int.parse(_avgDistance.text),
+              'preferences': selectedPrefs,
+              'currentDate': formattedDate,
+              'currentLocation': '${city}, ${state}',
+              'currentLocationLat': latitude,
+              'currentLocationLong': longitude,
             },
           },
         );
@@ -210,6 +253,7 @@ class _InnerOpenPanelState extends State<InnerOpenPanel> {
                       controller: _avgDistance,
                       // ignore: prefer_const_constructors
                       key: ValueKey('distance'),
+                      keyboardType: TextInputType.number,
                       validator: (value) {
                         if (value!.isEmpty) {
                           return 'Must Enter';

@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:wayah_app/screens/trip_screen.dart';
 import 'package:wayah_app/widgets/trip_widget.dart';
+
+import '../arguments/tripData.dart';
 
 class OpenPanel extends StatelessWidget {
   Widget collapsedPanel;
@@ -29,29 +32,6 @@ class OpenPanel extends StatelessWidget {
         ? panelController.close()
         : panelController.open();
   }
-
-  // _fetch() async {
-  //   try {
-  //     firebaseUser = await FirebaseAuth.instance.currentUser;
-
-  //     final QuerySnapshot<Map<String, dynamic>> _tripsQuery =
-  //         await FirebaseFirestore.instance
-  //             .collection('users')
-  //             .doc(firebaseUser!.uid)
-  //             .collection('trips')
-  //             .get();
-
-  //     final trips = _tripsQuery.docs
-  //         .map((trip) => {
-  //               destinationName = trip['trips']['destination'],
-  //               avgDistance = trip['trips']['avgDistance'],
-  //               preferences = trip['trips']['preferences']
-  //             })
-  //         .toList();
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -104,39 +84,41 @@ class OpenPanel extends StatelessWidget {
                   return ListView(
                     shrinkWrap: true,
                     children: snapshot.data!.docs.map((document) {
-                      // return Container(
-                      //   child: Text(
-                      //       document.data()['trips']['destination'].toString()),
-                      // );
                       return Padding(
-                        padding: const EdgeInsets.only(left: 30, right: 30),
-                        child: TripWidget(
-                          destinationName: document
-                              .data()['trips']['destination']
-                              .toString(),
+                        padding: const EdgeInsets.only(
+                            bottom: 15, left: 30, right: 30),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(context, TripScreen.routeName,
+                                arguments: TripData(
+                                  tripId: document.id,
+                                  tripInformation: document.data(),
+                                ));
+                          },
+                          child: TripWidget(
+                            destinationName: document
+                                .data()['trips']['destination']
+                                .toString(),
+                            date: document
+                                .data()['trips']['currentDate']
+                                .toString(),
+                            fromLocation: document
+                                .data()['trips']['currentLocation']
+                                .toString(),
+                          ),
                         ),
                       );
                     }).toList(),
                   );
                 }),
               ),
-              // ListView.builder(
-              //   shrinkWrap: true,
-              //   itemCount: 4,
-              //   itemBuilder: ((context, index) {
-              //     return Padding(
-              //       padding: const EdgeInsets.all(8.0),
-              //       child: TripWidget(),
-              //     );
-              //   }),
-              // ),
               Spacer(),
               Padding(
                 padding: const EdgeInsets.only(bottom: 50),
                 child: Transform.rotate(
                   angle: 3.95,
                   child: FloatingActionButton(
-                    heroTag: "btn2",
+                    heroTag: "btn1",
                     elevation: 0,
                     backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(

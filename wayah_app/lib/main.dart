@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:wayah_app/screens/no_access.dart';
 import 'package:wayah_app/screens/profile_screen.dart';
 import 'package:wayah_app/screens/signup_screen.dart';
+import 'package:wayah_app/screens/trip_screen.dart';
 import 'firebase_options.dart';
 
 import 'package:wayah_app/screens/login_screen.dart';
@@ -73,6 +74,7 @@ class MyApp extends StatelessWidget {
       routes: {
         LoginScreen.routeName: (ctx) => LoginScreen(),
         SignUpScreen.routeName: (ctx) => SignUpScreen(),
+        TripScreen.routeName: (ctx) => TripScreen(),
         ProfileScreen.routeName: (ctx) => ProfileScreen(
               email: email,
               username: username,

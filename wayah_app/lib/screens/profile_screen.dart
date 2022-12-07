@@ -25,6 +25,23 @@ class ProfileScreen extends StatelessWidget {
           style: TextStyle(
               color: Colors.black, fontWeight: FontWeight.bold, fontSize: 28),
         ),
+        leading: InkWell(
+          onTap: () {
+            Navigator.of(context).pop();
+          },
+          child: Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.arrow_back_ios,
+                  size: 23,
+                  color: Color.fromARGB(255, 41, 45, 61),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20, top: 20),

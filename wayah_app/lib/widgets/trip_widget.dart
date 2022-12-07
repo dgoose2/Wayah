@@ -4,18 +4,18 @@ import 'package:flutter/src/widgets/framework.dart';
 
 class TripWidget extends StatelessWidget {
   String destinationName;
-  // String fromLocation;
+  String fromLocation;
   // String time;
   // String stops;
-  // String date;
+  String date;
 
   TripWidget({
     super.key,
     required this.destinationName,
-    // required this.fromLocation,
+    required this.fromLocation,
     // required this.time,
     // required this.stops,
-    // required this.date,
+    required this.date,
   });
 
   @override
@@ -54,7 +54,7 @@ class TripWidget extends StatelessWidget {
                             fontWeight: FontWeight.bold, fontSize: 18),
                       ),
                       Text(
-                        'From Orgin',
+                        fromLocation,
                         style: TextStyle(fontSize: 12),
                       )
                     ],
@@ -113,7 +113,7 @@ class TripWidget extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 2),
                           child: Text(
-                            'test',
+                            date,
                             style: TextStyle(fontSize: 12),
                           ),
                         )
