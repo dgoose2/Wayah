@@ -25,7 +25,7 @@ class UserData with ChangeNotifier {
 
   String getEmail() {
     _fetch();
-    print(userData);
+    // print(userData);
 
     // email = userData!['email'].toString();
     email = 'poo';

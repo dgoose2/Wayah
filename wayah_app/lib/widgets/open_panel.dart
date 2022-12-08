@@ -12,8 +12,8 @@ import '../arguments/tripData.dart';
 class OpenPanel extends StatelessWidget {
   Widget collapsedPanel;
   Widget innerOpenPanel;
-  final panelController;
   var firebaseUser;
+  static final panelController = PanelController();
 
   String? destinationName;
   String? avgDistance;
@@ -23,7 +23,6 @@ class OpenPanel extends StatelessWidget {
     super.key,
     required this.collapsedPanel,
     required this.innerOpenPanel,
-    required this.panelController,
     required this.firebaseUser,
   });
 
@@ -104,6 +103,12 @@ class OpenPanel extends StatelessWidget {
                                 .toString(),
                             fromLocation: document
                                 .data()['trips']['currentLocation']
+                                .toString(),
+                            stops: document
+                                .data()['trips']['prefStops']
+                                .toString(),
+                            time: document
+                                .data()['trips']['prefStops']
                                 .toString(),
                           ),
                         ),

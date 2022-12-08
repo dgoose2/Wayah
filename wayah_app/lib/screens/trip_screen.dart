@@ -3,16 +3,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:wayah_app/widgets/stop_widget.dart';
 
 import '../arguments/tripData.dart';
+import 'package:map_launcher/map_launcher.dart';
 
 class TripScreen extends StatelessWidget {
   static const routeName = '/trip-screen';
-  const TripScreen({super.key});
+
+  var firebaseUser;
+  TripScreen({super.key, required this.firebaseUser});
 
   @override
   Widget build(BuildContext context) {
     var tripData = ModalRoute.of(context)!.settings.arguments as TripData;
+
+    var stopInfo = tripData.tripInformation['navigation'];
 
     _deleteItem() async {
       final firebaseUser = await FirebaseAuth.instance.currentUser;
@@ -30,6 +36,17 @@ class TripScreen extends StatelessWidget {
         print(error);
       }
     }
+
+    // _getDirections() async {
+    //   final availableMaps = await MapLauncher.installedMaps;
+    //   print(availableMaps);
+
+    //   await MapLauncher.showMarker(
+    //       mapType: MapType.apple,
+    //       coords: Coords(37.759392, -122.5107336),
+    //       title: "Ocean Beach");
+    //   // description: description,
+    // }
 
     return Scaffold(
         appBar: AppBar(
@@ -95,29 +112,57 @@ class TripScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          color: Color.fromARGB(255, 141, 141, 218),
-                          size: 30,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5),
-                          child: Text(
-                            tripData.tripInformation['trips']['currentLocation']
-                                .toString(),
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 5),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.location_on_outlined,
+                            color: Color.fromARGB(255, 141, 141, 218),
+                            size: 30,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 5),
+                            child: Text(
+                              tripData.tripInformation['trips']
+                                      ['currentLocation']
+                                  .toString(),
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 15),
+                      padding:
+                          const EdgeInsets.only(left: 14, top: 5, bottom: 10),
+                      child: MediaQuery.removePadding(
+                        context: context,
+                        removeBottom: true,
+                        removeTop: true,
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: tripData
+                              .tripInformation['navigation']['stops'].length,
+                          itemBuilder: (context, index) => StopWidget(
+                            stopName: tripData.tripInformation['navigation']
+                                    ['stops'][index]['name']
+                                .toString(),
+                            lat: tripData.tripInformation['navigation']['stops']
+                                [index]['lat'],
+                            long: tripData.tripInformation['navigation']
+                                ['stops'][index]['long'],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 0),
                       child: Row(
                         children: [
                           Icon(
@@ -136,6 +181,22 @@ class TripScreen extends StatelessWidget {
                               ),
                             ),
                           ),
+                          Spacer(),
+                          InkWell(
+                            onTap: () async {
+                              await MapLauncher.showMarker(
+                                  mapType: MapType.apple,
+                                  coords: Coords(
+                                      stopInfo['endDestination']['lat'],
+                                      stopInfo['endDestination']['long']),
+                                  title: tripData.tripInformation['trips']
+                                      ['destination']);
+                            },
+                            child: Icon(
+                              Icons.near_me_outlined,
+                              size: 20,
+                            ),
+                          )
                         ],
                       ),
                     ),
@@ -167,7 +228,7 @@ class TripScreen extends StatelessWidget {
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(left: 2),
-                                child: Text('test',
+                                child: Text(stopInfo['time'],
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Color.fromARGB(255, 2, 0, 39),
@@ -187,7 +248,7 @@ class TripScreen extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 2),
                                   child: Text(
-                                    'test',
+                                    stopInfo['stops'].length.toString(),
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Color.fromARGB(255, 2, 0, 39),
@@ -229,7 +290,7 @@ class TripScreen extends StatelessWidget {
               ),
               Spacer(),
               Padding(
-                padding: const EdgeInsets.only(bottom: 40),
+                padding: const EdgeInsets.only(bottom: 40, left: 10),
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.8,
                   height: 45,
@@ -240,11 +301,11 @@ class TripScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                         )),
                     child: Text(
-                      'Start Trip',
+                      'Complete Trip',
                       style: TextStyle(fontSize: 18),
                     ),
-                    onPressed: () {
-                      print('start');
+                    onPressed: () async {
+                      _deleteItem();
                     },
                   ),
                 ),

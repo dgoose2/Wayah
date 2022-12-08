@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,15 +9,14 @@ import 'package:location/location.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:geocoding/geocoding.dart' as Geo;
 import 'package:string_validator/string_validator.dart';
+import 'package:wayah_app/widgets/open_panel.dart';
 import 'package:wayah_app/widgets/preference_widget.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:intl/intl.dart';
 
+import 'package:http/http.dart' as http;
+
 class InnerOpenPanel extends StatefulWidget {
-  PanelController panelController;
-
-  InnerOpenPanel({required this.panelController});
-
   @override
   State<InnerOpenPanel> createState() => _InnerOpenPanelState();
 }
@@ -30,9 +31,11 @@ class _InnerOpenPanelState extends State<InnerOpenPanel> {
   String? city;
   String? state;
   var _destination = TextEditingController();
-  var _avgDistance = TextEditingController();
-  final panelController = PanelController();
+  var _howManyStops = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  var tripId;
+  var stops;
+  var destination;
 
   List selectedPrefs = [];
   List<Item> listOfModel = [];
@@ -41,7 +44,7 @@ class _InnerOpenPanelState extends State<InnerOpenPanel> {
   initState() {
     listOfModel.add(Item(pref: 'Restaurant'));
     listOfModel.add(Item(pref: 'Park'));
-    listOfModel.add(Item(pref: 'Restop'));
+    listOfModel.add(Item(pref: 'Rest Stop'));
     listOfModel.add(Item(pref: 'Gas Station'));
     listOfModel.add(Item(pref: 'Grocery Store'));
     listOfModel.add(Item(pref: 'Fast Food'));
@@ -95,27 +98,41 @@ class _InnerOpenPanelState extends State<InnerOpenPanel> {
 
     try {
       if (isValid) {
+        destination = _destination.text;
+        stops = int.parse(_howManyStops.text);
         await FirebaseFirestore.instance
             .collection('users')
             .doc(firebaseUser!.uid)
             .collection('trips')
             .add(
           {
+            'trips': {},
+          },
+        ).then((docRef) {
+          tripId = docRef.id;
+          FirebaseFirestore.instance
+              .collection('users')
+              .doc(firebaseUser.uid)
+              .collection('trips')
+              .doc(docRef.id)
+              .update({
             'trips': {
+              'userId': firebaseUser.uid,
+              'tripId': docRef.id,
               'destination': _destination.text,
               'destinationLat': desitnationLatitude,
               'destinationLong': destinationLongitude,
-              'avgDistance': int.parse(_avgDistance.text),
+              'prefStops': stops,
               'preferences': selectedPrefs,
               'currentDate': formattedDate,
               'currentLocation': '${city}, ${state}',
               'currentLocationLat': latitude,
               'currentLocationLong': longitude,
-            },
-          },
-        );
+            }
+          });
+        });
         _destination.clear();
-        _avgDistance.clear();
+        _howManyStops.clear();
         for (Item item in listOfModel) {
           for (String pref in selectedPrefs) {
             if (item.pref == pref) {
@@ -125,11 +142,39 @@ class _InnerOpenPanelState extends State<InnerOpenPanel> {
             }
           }
         }
-        widget.panelController.close();
+        OpenPanel.panelController.close();
       }
     } catch (error) {
       print(error);
     }
+
+    var headers = {
+      'Authorization': 'bearer \$(gcloud auth print-identity-token)',
+      'Content-Type': 'application/json',
+    };
+
+    var data = {
+      "destination": destination,
+      "currentDate": formattedDate,
+      "destinationLat": desitnationLatitude,
+      "destinationLong": destinationLongitude,
+      "currentLocation": '${city}, ${state}',
+      "currentLocationLat": latitude,
+      "currentLocationLong": longitude,
+      "prefStops": stops,
+      "preferences": selectedPrefs,
+      "userId": firebaseUser!.uid,
+      "tripId": tripId
+    };
+
+    var jsonString = json.encode(data);
+
+    var url = Uri.parse(
+        'https://us-central1-egr423-mobile-app.cloudfunctions.net/wayah-fullRoute-python');
+    var res = await http.post(url, headers: headers, body: jsonString);
+    if (res.statusCode != 200)
+      throw Exception('http.post error: statusCode= ${res.statusCode}');
+    print(res.body);
   }
 
   @override
@@ -240,7 +285,7 @@ class _InnerOpenPanelState extends State<InnerOpenPanel> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Avg. Distance Per Stop",
+                          "Stops",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
@@ -250,7 +295,7 @@ class _InnerOpenPanelState extends State<InnerOpenPanel> {
                       ),
                     ),
                     TextFormField(
-                      controller: _avgDistance,
+                      controller: _howManyStops,
                       // ignore: prefer_const_constructors
                       key: ValueKey('distance'),
                       keyboardType: TextInputType.number,
@@ -262,13 +307,9 @@ class _InnerOpenPanelState extends State<InnerOpenPanel> {
                       },
                       style:
                           TextStyle(color: Color.fromARGB(255, 141, 141, 218)),
-                      // ignore: prefer_const_constructors
-                      // onChanged: (newValue) {
-                      //   _avgDistance = newValue;
-                      // },
                       decoration: InputDecoration(
                         contentPadding: EdgeInsets.only(left: 15, bottom: 35),
-                        hintText: '50 mi.',
+                        hintText: '5 stops',
                         border: InputBorder.none,
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(

@@ -27,7 +27,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   String username = '';
   String email = '';
-  var firebaseUser;
+  static var firebaseUser;
 
   _fetch() async {
     firebaseUser = await FirebaseAuth.instance.currentUser;
@@ -74,7 +74,9 @@ class MyApp extends StatelessWidget {
       routes: {
         LoginScreen.routeName: (ctx) => LoginScreen(),
         SignUpScreen.routeName: (ctx) => SignUpScreen(),
-        TripScreen.routeName: (ctx) => TripScreen(),
+        TripScreen.routeName: (ctx) => TripScreen(
+              firebaseUser: firebaseUser,
+            ),
         ProfileScreen.routeName: (ctx) => ProfileScreen(
               email: email,
               username: username,

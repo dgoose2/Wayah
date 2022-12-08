@@ -727,6 +727,8 @@ PODS:
   - Libuv-gRPC/Interface (0.0.10)
   - location (0.0.1):
     - Flutter
+  - map_launcher (0.0.1):
+    - Flutter
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
     - nanopb/encode (= 2.30909.0)
@@ -742,6 +744,7 @@ DEPENDENCIES:
   - geocoding (from `.symlinks/plugins/geocoding/ios`)
   - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - location (from `.symlinks/plugins/location/ios`)
+  - map_launcher (from `.symlinks/plugins/map_launcher/ios`)
 
 SPEC REPOS:
   trunk:
@@ -776,6 +779,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/geolocator_apple/ios"
   location:
     :path: ".symlinks/plugins/location/ios"
+  map_launcher:
+    :path: ".symlinks/plugins/map_launcher/ios"
 
 SPEC CHECKSUMS:
   abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
@@ -798,6 +803,7 @@ SPEC CHECKSUMS:
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378
   location: 3a2eed4dd2fab25e7b7baf2a9efefe82b512d740
+  map_launcher: e325db1261d029ff33e08e03baccffe09593ffea
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
 

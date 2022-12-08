@@ -5,16 +5,16 @@ import 'package:flutter/src/widgets/framework.dart';
 class TripWidget extends StatelessWidget {
   String destinationName;
   String fromLocation;
-  // String time;
-  // String stops;
+  String time;
+  String stops;
   String date;
 
   TripWidget({
     super.key,
     required this.destinationName,
     required this.fromLocation,
-    // required this.time,
-    // required this.stops,
+    required this.time,
+    required this.stops,
     required this.date,
   });
 
@@ -66,43 +66,8 @@ class TripWidget extends StatelessWidget {
               padding: const EdgeInsets.only(left: 33, top: 10, bottom: 5),
               child: Row(
                 children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.schedule,
-                        size: 14,
-                        color: Color.fromARGB(255, 18, 19, 26),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 2),
-                        child: Text(
-                          'test',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      )
-                    ],
-                  ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.route_outlined,
-                          size: 14,
-                          color: Color.fromARGB(255, 18, 19, 26),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 2),
-                          child: Text(
-                            'test',
-                            style: TextStyle(fontSize: 12),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
+                    padding: const EdgeInsets.only(left: 0),
                     child: Row(
                       children: [
                         Icon(
